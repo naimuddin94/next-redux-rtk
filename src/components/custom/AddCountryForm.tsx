@@ -12,10 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAddCountryMutation } from "@/redux/features/baseApi";
+import { IAddCountryFormProps } from "@/types/types";
 import { FormEvent } from "react";
 import Swal from "sweetalert2";
 
-export function AddCountryForm() {
+export function AddCountryForm({ country }: IAddCountryFormProps) {
   const [addCountry, { data, isError }] = useAddCountryMutation();
   console.log(data, isError);
 

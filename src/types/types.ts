@@ -4,3 +4,7 @@ export interface ICountry {
   code: string;
   created_at: Date;
 }
+
+export interface IAddCountryFormProps {
+  country?: ICountry;
+}
