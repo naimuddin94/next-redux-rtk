@@ -11,12 +11,11 @@ export default async function UpdatePage({
   );
   const country = await response.json();
 
-  console.log(country);
 
   return (
     <main className="p-10 flex gap-16">
       <div>
-        <AddCountryForm />
+        <AddCountryForm country={country} />
       </div>
       <div className="flex-1">
         <CountryTable />

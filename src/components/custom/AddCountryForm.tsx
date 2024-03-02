@@ -18,7 +18,6 @@ import Swal from "sweetalert2";
 
 export function AddCountryForm({ country }: IAddCountryFormProps) {
   const [addCountry, { data, isError }] = useAddCountryMutation();
-  console.log(data, isError);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -26,13 +25,21 @@ export function AddCountryForm({ country }: IAddCountryFormProps) {
     const name = form.country.value;
     const code = form.code.value;
 
-    addCountry({ name, code }).then(() => {
-      Swal.fire({
-        title: "Country Created!",
-        text: "Country Added Successfully",
-        icon: "success",
-      });
-      form.reset();
+    addCountry({ name, code }).then((result) => {
+      if ((result as any)?.data?.message) {
+        Swal.fire({
+          title: "Created!",
+          text: "Country Added Successfully!",
+          icon: "success",
+        });
+        form.reset();
+      } else if ((result as any)?.error) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to create country.",
+          icon: "error",
+        });
+      }
     });
   };
 
@@ -48,6 +55,7 @@ export function AddCountryForm({ country }: IAddCountryFormProps) {
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
               <Input
+                defaultValue={country ? country.name : ""}
                 name="country"
                 id="name"
                 placeholder="Enter country name here"
@@ -55,7 +63,12 @@ export function AddCountryForm({ country }: IAddCountryFormProps) {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="framework">Code</Label>
-              <Input name="code" id="name" placeholder="Enter country code" />
+              <Input
+                defaultValue={country ? country.code : ""}
+                name="code"
+                id="name"
+                placeholder="Enter country code"
+              />
             </div>
           </div>
         </CardContent>
