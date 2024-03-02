@@ -1,13 +1,15 @@
+"use client";
+
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
+import { useGetCountriesQuery } from "@/redux/features/baseApi";
 
 const invoices = [
   {
@@ -31,6 +33,12 @@ const invoices = [
 ];
 
 export function CountryTable() {
+  const {
+    data: countries,
+    isLoading,
+    refetch,
+  } = useGetCountriesQuery("countries");
+
   return (
     <Table>
       <TableHeader>
@@ -42,11 +50,11 @@ export function CountryTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
+        {countries?.map((country, index) => (
+          <TableRow key={country._id}>
+            <TableCell className="font-medium">{index + 1}</TableCell>
+            <TableCell>{country.name}</TableCell>
+            <TableCell>{country.code}</TableCell>
             <TableCell className="text-right">
               <Button variant="ghost">
                 <svg
