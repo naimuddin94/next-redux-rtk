@@ -9,35 +9,37 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { useGetCountriesQuery } from "@/redux/features/baseApi";
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-];
+import {
+  useGetCountriesQuery,
+  useRemoveCountryMutation,
+} from "@/redux/features/baseApi";
+import Swal from "sweetalert2";
 
 export function CountryTable() {
-  const {
-    data: countries,
-    isLoading,
-    refetch,
-  } = useGetCountriesQuery("countries");
+  const { data: countries } = useGetCountriesQuery("countries");
+  const [removeCountry, { data, isError }] = useRemoveCountryMutation();
+
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeCountry(id).then((result) => {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your Country Deleted.",
+            icon: "success",
+          });
+        });
+      }
+    });
+  };
 
   return (
     <Table>
@@ -72,7 +74,7 @@ export function CountryTable() {
                   />
                 </svg>
               </Button>
-              <Button variant="ghost">
+              <Button onClick={() => handleDelete(country._id)} variant="ghost">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
